@@ -39,7 +39,7 @@ fi
 [ -n "$AWS_DEFAULT_REGION" ] && export AWS_DEFAULT_REGION
 
 if [ "$skip_download" == "true" ]; then
-  echo "Downloading from S3..."
+  echo "Blah Downloading from S3..."
   eval aws s3 sync "s3://$bucket/$path" $dest $options
   echo "...done."
 else
