@@ -19,11 +19,15 @@ payload=`cat`
 bucket=$(echo "$payload" | jq -r '.source.bucket')
 path=$(echo "$payload" | jq -r '.source.path // ""')
 options=$(echo "$payload" | jq -r '.source.options // [] | join(" ")')
+skip_download=$(echo "$payload" | jq -r '.source.skip_download // empty')
 
 # export for `aws` cli
 AWS_ACCESS_KEY_ID=$(echo "$payload" | jq -r '.source.access_key_id // empty')
 AWS_SECRET_ACCESS_KEY=$(echo "$payload" | jq -r '.source.secret_access_key // empty')
 AWS_DEFAULT_REGION=$(echo "$payload" | jq -r '.source.region // empty')
+
+
+
 
 # Due to precedence rules, must be unset to support AWS IAM Roles.
 if [ -n "$AWS_ACCESS_KEY_ID" ] && [ -n "$AWS_SECRET_ACCESS_KEY" ]; then
@@ -34,8 +38,13 @@ fi
 # Export AWS_DEFAULT_REGION if set
 [ -n "$AWS_DEFAULT_REGION" ] && export AWS_DEFAULT_REGION
 
-echo "Downloading from S3..."
-eval aws s3 sync "s3://$bucket/$path" $dest $options
-echo "...done."
+if [ "$skip_download" == "true" ]; then
+  echo "Downloading from S3..."
+  eval aws s3 sync "s3://$bucket/$path" $dest $options
+  echo "...done."
+else
+  echo "Skip_download set to true - no downlad is required"
+  echo "...done."
+fi
 
 source "$(dirname $0)/emit.sh" >&3
