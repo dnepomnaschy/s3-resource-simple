@@ -40,12 +40,12 @@ fi
 
 echo "skip_download: $skip_download"
 
-if [ "$skip_download" != "true" ]; then
-  echo "Blah Downloading from S3..."
-  eval aws s3 sync "s3://$bucket/$path" $dest $options
+if [ "$skip_download" == "true" ]; then
+  echo "Skip_download set to true - no downlad is required"
   echo "...done."
 else
-  echo "Skip_download set to true - no downlad is required"
+  echo "Downloading from S3..."
+  eval aws s3 sync "s3://$bucket/$path" $dest $options
   echo "...done."
 fi
 
