@@ -38,7 +38,7 @@ fi
 # Export AWS_DEFAULT_REGION if set
 [ -n "$AWS_DEFAULT_REGION" ] && export AWS_DEFAULT_REGION
 
-echo "skip_download: $skip_download"
+echo "skip_download set to: '$skip_download'"
 
 if [ "$skip_download" == "true" ]; then
   echo "Skip_download set to true - no downlad is required"
